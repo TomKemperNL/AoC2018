@@ -5,15 +5,30 @@ open System.Collections.Generic
 open System.Collections
 
 type Bits() =
-    let pbits = new BitArray(Int32.MaxValue)
-    let nbits = new BitArray(Int32.MaxValue)
+    let increment =  8 * 1024 * 100
+    let mutable size = 8 * 1024 * 100
+    let mutable pbits = new BitArray(size)
+    let mutable nbits = new BitArray(size)
 
-    member this.getBit nr =
-        if nr < 0 then nbits.[-1*nr] else pbits.[nr]    
-    member this.setBit nr =
-        if nr < 0 then nbits.[-1*nr] <- true else pbits.[nr] <- true    
-    member this.unsetBit nr =
-        if nr < 0 then nbits.[-1*nr] <- false else pbits.[nr] <- false
+    let resize (nr: int) =
+        let anr = Math.Abs(nr)
+        if anr >= size then         
+            size <- anr + increment
+            pbits.Length <- size
+            nbits.Length <- size
+
+    member this.getBit (nr:int) =
+        resize nr
+
+        if nr < 0 then nbits.[Math.Abs(nr)] else pbits.[nr]    
+    member this.setBit (nr:int) =
+        resize nr
+
+        if nr < 0 then nbits.[Math.Abs(nr)] <- true else pbits.[nr] <- true    
+    member this.unsetBit (nr:int) =
+        resize nr
+
+        if nr < 0 then nbits.[Math.Abs(nr)] <- false else pbits.[nr] <- false    
             
 
 let parseToken (s:String) =    
