@@ -46,8 +46,10 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Day1Tests.fs" />
-    <None Include="Script.fsx" />
     <Content Include="packages.config" />
+    <Content Include="Day1Input.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
