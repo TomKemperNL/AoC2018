@@ -27,4 +27,4 @@ type Day2Tests() =
     [<Test>]
     member this.Day2B() =
         let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day2Input.txt")
-        Assert.AreEqual("fgij", day2B (File.ReadAllLines(path)))
+        Assert.AreEqual("vtnikorkulbfejvyznqgdxpaw", day2B (File.ReadAllLines(path)))
