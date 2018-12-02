@@ -1,13 +1,12 @@
 ﻿module AoC2018.Tests.Day1
 
 open System.IO;
-open NUnit.Framework.Internal
 open NUnit.Framework
 open Day1
 open System
 
 [<TestFixture>]
-type Class1() =
+type Day1Tests() =
     let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day1Input.txt")
 
     [<TestCase(3, "+1, -2, +3, +1")>]

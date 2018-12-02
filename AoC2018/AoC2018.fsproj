@@ -49,6 +49,7 @@
     <None Include="App.config" />
     <Content Include="packages.config" />
     <Compile Include="Day1.fs" />
+    <Compile Include="Day2.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">

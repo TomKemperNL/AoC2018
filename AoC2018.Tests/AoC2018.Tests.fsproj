@@ -50,6 +50,14 @@
     <Content Include="Day1Input.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="Day2Tests.fs" />
+    <Content Include="Day2Example.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day2Input.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day2BExample.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
