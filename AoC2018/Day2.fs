@@ -14,22 +14,27 @@ let day2A (ss: string[]) =
 let compare (s1: string) (s2: string) =
     if s1.Length <> s2.Length then failwith "Strings of uneven length"
     let max = s1.Length - 1
-    seq { for i in 0 .. max -> s1.Chars i = s2.Chars i }
+    seq { for i in 0 .. max -> s1.Chars i = s2.Chars i } |> Seq.toArray
  
 let compareWithList (ss: string[]) (s: string) =
-    let onlyOneDifference x = 
-        let matches = compare x s 
-        let nrOfMatches = Seq.filter id matches |> Seq.length
-        if s.Length - nrOfMatches = 1 then
+    let findSingleDifference x = 
+        let matches: bool[] = compare x s        
+        
+        let countIf c b = 
+            if not b then c + 1 else c
+        let nrOfMismatches: int = Seq.fold countIf 0 matches 
+        
+        if nrOfMismatches = 1 then
             let ix = Seq.findIndex not matches            
-            Some (x.Remove(ix, 1))
-        else None
-    Array.choose onlyOneDifference ss
+            let withoutMismatch = (x.Remove(ix, 1))
+            Some withoutMismatch
+        else 
+            None
+    Array.tryPick findSingleDifference ss 
 
 let day2B (ss: string[]) =
-    let results = Array.map (compareWithList ss) ss |> (Array.filter (fun(x) -> x.Length > 0))
-    let ouch = results.[0].[0]
-    ouch
+    Array.pick (compareWithList ss) ss  
+    
 
     
     
