@@ -25,45 +25,43 @@ let parse (s:string) : Claim =
         Claim (toDigit 1, Coord(toDigit 2, toDigit 3), Size(toDigit 4, toDigit 5))
     else failwith(sprintf "Could not parse %s" s)
 
-let addToIndex (index: Index) claim =
+let coords claim = 
     match claim with
-    | Claim (_, Coord(x,y), Size(w,h)) ->        
-        for ix in x .. (x + w - 1) do
-        for iy in y .. (y + h - 1) do
-        let coord = Coord(ix,iy)
-        if index.ContainsKey(coord) then
-            index.[coord].Add(claim) |> ignore
-        else
-            let freshList : HashSet<Claim> = new HashSet<Claim>()
-            freshList.Add(claim) |> ignore
-            index.Add(coord, freshList) 
-        
+    | Claim (_, Coord(x,y), Size(w,h)) ->       
+        seq {
+            for ix in x .. (x + w - 1) do
+            for iy in y .. (y + h - 1) do
+            yield Coord(ix,iy)
+        }
 
-let createIndex claims =
-    let index = new Index()
-    for c in claims do
-        addToIndex index c |> ignore
-    index
+let createIndex claims =    
+    let addToIndex (index: Index) (claim: Claim) :Index =
+        let add (coord: Coord) = 
+            if index.ContainsKey(coord) then
+                index.[coord].Add(claim) |> ignore
+            else
+                let freshList : HashSet<Claim> = new HashSet<Claim>()
+                freshList.Add(claim) |> ignore
+                index.Add(coord, freshList)
+        coords claim |> Seq.iter add
+        index
+
+    Seq.fold addToIndex (new Index()) claims    
 
 let day3A (input: string[]) =
     let parsed = Array.map parse input
-    let index = createIndex parsed    
+    let index = createIndex parsed
     index.Values |> Seq.filter (fun(kv: HashSet<Claim>) -> kv.Count > 1) |> Seq.length
-
-let findPartners (index: Index) (claim: Claim) : HashSet<Claim> =
-    let partners = new HashSet<Claim>()        
-    match claim with
-    | Claim (_, Coord(x,y), Size(w,h)) ->    
-        for ix in x .. (x + w - 1) do
-        for iy in y .. (y + h - 1) do        
-        let coord = Coord (ix, iy)
-        for p in index.[coord] do
-        partners.Add p |> ignore    
-    partners
-
+    
 let day3B (input: string[]) =
     let parsed = Array.map parse input
     let index = createIndex parsed 
+
+    let findPartners (index: Index) (claim: Claim) : Set<Claim> =        
+        let addPartners (partners: Set<Claim>) (coord: Coord) : Set<Claim>=
+            Seq.fold (fun x y -> Set.add y x) partners index.[coord]            
+        coords claim |> Seq.fold addPartners Set.empty        
+
     let solo = Array.find (fun(c) -> findPartners index c |> Seq.length = 1) parsed    
     match solo with 
     | Claim (id,_,_) -> id
