@@ -10,26 +10,32 @@ let charsToString cs =
     new String(cs |> List.toArray)
 
 let rec fix f i =
-    let result = f i
-    printfn "%s" (charsToString result) |> ignore
+    let result = f i    
     if result = i then result
     else fix f result
 
-let day5A (input: string) :string=
-    printfn "lalala"
-    let rec react (polymer: char list) : char list=
+let variant (polymer: char list) (utype: char) : char list =
+    polymer |> List.filter (fun c -> not (c.ToString().Equals(utype.ToString(), StringComparison.InvariantCultureIgnoreCase)))
+
+let react polymer =
+    let rec reactRec acc (polymer: char list) :char list =
         match polymer with
         | h1::t1 ->
             match t1 with 
             | h2::t2 ->
-                if shouldReact h1 h2 then react t2
-                else h1 :: react t1
-            | [] -> h1 :: react t1
-        | [] -> polymer
+                if shouldReact h1 h2 then reactRec acc t2
+                else reactRec (h1 :: acc) t1
+            | [] -> reactRec (h1:: acc) t1 
+        | [] -> List.rev acc
+    fix (reactRec [])  polymer
 
-    let result = fix react (List.ofSeq input) |> List.toArray
-    new String(result)
+let day5A (input: string) :int =    
+    react (List.ofSeq input) |> List.length
+    
 
 
-let day5B input = 
-    null
+let day5B (input: string) :int= 
+    let polymer = List.ofSeq input
+    seq {
+        for c in 'a' .. 'z' -> c
+    } |> Seq.map (variant polymer) |> Seq.map react |> Seq.map Seq.length |> Seq.min
