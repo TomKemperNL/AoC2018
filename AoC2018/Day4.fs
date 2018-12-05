@@ -34,8 +34,6 @@ let (|Regex|_|) pattern input =
     else None
 
 type Line = DateTime * GuardAction
-           
-
 
 let parse (line: string) : Line =    
     let timePart = line.Substring(0, 18)
