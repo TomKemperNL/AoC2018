@@ -8,6 +8,9 @@ module Coord =
     let Neighbours (x,y) = 
         [ (x - 1, y); (x + 1, y); (x, y - 1); (x, y + 1) ]
 
+    let distance ((x1,y1): Coord) ((x2,y2): Coord) =        
+        Math.Abs(x1 - x2) + Math.Abs((y1 - y2))
+
 type Kind = 
     | Infinite
     | Finite
@@ -34,6 +37,10 @@ type ClaimStatus =
     | Claimed of Coord
 
 type Claim = Coord * Coord list
+
+module Claim =    
+    let filter f (o, coords) =
+                (o, coords |> List.filter f)
 
 let parse input =
     match input with 
@@ -62,8 +69,9 @@ let claim map (newClaims: seq<Claim>) =
         | s when (Set.count s = 1) -> Map.add coord (Claimed (Set.maxElement s)) map
         | _ -> Map.add coord Tied map
 
-    Map.fold updateMap map lookup
-
+    let newMap = Map.fold updateMap map lookup
+    let untiedClaims = Seq.map (Claim.filter (fun coord -> (Map.find coord newMap) <> Tied)) newClaims
+    (newMap, untiedClaims)
 
 let blobmap map (initialClaims: Claim seq) infinitepoints = 
     let bounds = Bounds.find (initialClaims |> Seq.collect snd)
@@ -84,18 +92,15 @@ let blobmap map (initialClaims: Claim seq) infinitepoints =
         if Seq.isEmpty (goodClaims |> Seq.collect snd) then
             (map, infinites)
         else
-            let (map, untiedClaims) = claim map goodClaims
-
-            let filterClaim (o, coords) =
-                (o, coords |> List.filter (fun c -> not <| Map.containsKey c map))
-            let front = expandFront untiedClaims |> Seq.map filterClaim
+            let (map, untiedClaims) = claim map goodClaims           
+            let front = expandFront untiedClaims |> Seq.map (Claim.filter (fun c -> not <| Map.containsKey c map))
 
             blobRec map front infinites
 
     blobRec map initialClaims Set.empty
 
 let day6A inputs =
-    let inputs = inputs |> Seq.map parse     
+    let inputs = inputs |> Seq.map parse
     let initialMap = Map.empty
     let initialClaims = inputs |> Seq.map (fun c -> (c, [c]))
 
@@ -108,5 +113,17 @@ let day6A inputs =
     let answer = result |> Seq.head |> snd
     answer
 
-let day6B inputs = 
-    null
+let day6B tolerance inputs = 
+    let inputs = inputs |> Seq.map parse
+    let bounds = Bounds.find inputs
+    let (tlx, tly) = bounds.TopLeft
+    let (brx, bry) = bounds.BottomRight
+    seq {
+        for x in tlx .. brx do
+        for y in tly .. bry do
+
+        let total = inputs |> Seq.map (fun i -> Coord.distance (x,y) i) |> Seq.sum
+        if total < tolerance then
+            yield (x,y)
+
+    } |> Seq.length
