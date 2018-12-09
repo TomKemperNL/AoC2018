@@ -36,11 +36,11 @@ type Day7Tests() =
             "Step B must be finished before step E can begin.";
             "Step D must be finished before step E can begin.";
             "Step F must be finished before step E can begin." |]
-        let result = day7B input
-        Assert.AreEqual(null, result)
+        let result = day7B 2 0 input
+        Assert.AreEqual(15, result)
 
 
     [<Test>]
     member this.Day7B() =
         let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day7Input.txt")
-        Assert.AreEqual(null, (day7B  (File.ReadAllLines(path))))
+        Assert.AreEqual(null, (day7B 5 60 (File.ReadAllLines(path))))
