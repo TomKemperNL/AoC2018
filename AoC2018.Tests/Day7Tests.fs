@@ -43,4 +43,4 @@ type Day7Tests() =
     [<Test>]
     member this.Day7B() =
         let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day7Input.txt")
-        Assert.AreEqual(null, (day7B 5 60 (File.ReadAllLines(path))))
+        Assert.AreEqual(959, (day7B 5 60 (File.ReadAllLines(path))))

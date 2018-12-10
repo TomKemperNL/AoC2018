@@ -28,15 +28,26 @@ module Action =
         let letters = seq { 'A'..'Z' }
         let numbers = seq { 1 .. 26 }
         Seq.zip letters numbers |> Map.ofSeq
+    
+    let isCompleted progress action = 
+        Seq.contains action progress.Completed 
 
-    let isAvailable rules actionsPerformed action : bool =
-        if Seq.contains action actionsPerformed then false
+    let isInProgress progress action : bool= 
+        let workersWork worker = 
+            match worker with
+            | Idle -> None
+            | WorkOn (a, t) -> Some a
+        Seq.choose workersWork progress.Workers |> Seq.contains action
+    
+    let isAvailable rules (progress: Progress) action : bool =
+        if isCompleted progress action then false        
+        else if isInProgress progress action  then false
         else
-        let unsatisfiedRules = Seq.filter (fun (c,q) -> not <| Seq.contains c actionsPerformed) rules
+        let unsatisfiedRules = Seq.filter (fun (c,q) -> not <| Seq.contains c progress.Completed) rules
         not <| Seq.exists (fun (c,q) -> q = action) unsatisfiedRules
 
     let duration (basecost: int) (action: Action) =
-        60 + (Map.find action actionsMap)
+        basecost + (Map.find action actionsMap)
     
 let parse (input: string) : Rule = 
     match input with 
@@ -48,20 +59,21 @@ let rec step scenario (progress: Progress) =
         match worker with 
         | Idle -> (worker::workers, items)
         | WorkOn (action, start) -> 
-            if progress.Timer >= (scenario.CostFunction action) + start then
+            let actionEnd = (scenario.CostFunction action) + start 
+            if progress.Timer >= actionEnd then
                 (Idle::workers, action::items)
             else
                 (worker::workers, items)
 
-    let (updatedWorkers, finishedItems) = Seq.fold advanceWork (List.empty, List.empty) progress.Workers
+    let (advancedWorkers, finishedItems) = Seq.fold advanceWork (List.empty, List.empty) progress.Workers
 
-    let progress = {
+    let advancedProgress = {
         progress with 
             Completed = (List.append finishedItems progress.Completed);
-            Workers = updatedWorkers
+            Workers = advancedWorkers
     }
     
-    let availableWork = Seq.filter (Action.isAvailable scenario.Rules progress.Completed) scenario.Actions |> Seq.sort |> Seq.toList
+    let availableWork = Seq.filter (Action.isAvailable scenario.Rules advancedProgress) scenario.Actions |> Seq.sort |> Seq.toList
 
     let assignWork ((workers: Worker list), (availableWork: Action list)) worker =
         match worker with 
@@ -69,22 +81,22 @@ let rec step scenario (progress: Progress) =
         | Idle -> 
             match availableWork with 
             | [] -> (Idle :: workers, availableWork)
-            | nextItem :: remainingWork -> ((WorkOn (nextItem,progress.Timer)) :: workers, remainingWork)
+            | nextItem :: remainingWork -> ((WorkOn (nextItem,advancedProgress.Timer)) :: workers, remainingWork)
  
-    let (updatedWorkers, _) = Seq.fold assignWork (List.empty, availableWork) progress.Workers
+    let (assignedWorkers, _) = Seq.fold assignWork (List.empty, availableWork) advancedProgress.Workers
 
-    let progress = {
-        progress with          
-            Workers = updatedWorkers
+    let assignedProgress = {
+        advancedProgress with          
+            Workers = assignedWorkers
     }
 
-    if (Seq.length scenario.Actions) = (List.length progress.Completed) then
-        { progress with
-           Completed = List.rev progress.Completed }
+    if (Seq.length scenario.Actions) = (List.length assignedProgress.Completed) then
+        { assignedProgress with
+           Completed = List.rev assignedProgress.Completed }
     else
         let progress = {
-            progress with          
-                Timer = progress.Timer + 1                
+            assignedProgress with          
+                Timer = assignedProgress.Timer + 1                
         }
 
         step scenario progress
