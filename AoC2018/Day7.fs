@@ -9,15 +9,16 @@ type Rule = Action*Action
 
 type Worker = 
     | Idle
-    | WorkOn of Action
+    | WorkOn of Action * int
 
 type Scenario = {
     Rules: Rule seq
-    Actions: Action seq
-    Workers: Worker seq
+    Actions: Action seq    
+    CostFunction: Action -> int
 }
 
-type Progress = {
+type Progress = {    
+    Workers: Worker seq
     Completed: Action list
     Timer: int
 }
@@ -42,22 +43,72 @@ let parse (input: string) : Rule =
     | Regex "Step ([A-Z]) must be finished before step ([A-Z]) can begin." [a; b] -> (a.Chars 0, b.Chars 0)
     | _ -> failwith "parse error"
 
-let rec step scenario (progress: Progress) =    
-    let next = Seq.filter (Action.isAvailable scenario.Rules progress.Completed) scenario.Actions |> Seq.sort
-    if Seq.isEmpty next then
-        { progress with Completed = (List.rev progress.Completed) }
+let rec step scenario (progress: Progress) =     
+    let advanceWork (workers, items) worker =
+        match worker with 
+        | Idle -> (worker::workers, items)
+        | WorkOn (action, start) -> 
+            if progress.Timer >= (scenario.CostFunction action) + start then
+                (Idle::workers, action::items)
+            else
+                (worker::workers, items)
+
+    let (updatedWorkers, finishedItems) = Seq.fold advanceWork (List.empty, List.empty) progress.Workers
+
+    let progress = {
+        progress with 
+            Completed = (List.append finishedItems progress.Completed);
+            Workers = updatedWorkers
+    }
+    
+    let availableWork = Seq.filter (Action.isAvailable scenario.Rules progress.Completed) scenario.Actions |> Seq.sort |> Seq.toList
+
+    let assignWork ((workers: Worker list), (availableWork: Action list)) worker =
+        match worker with 
+        | WorkOn _ -> (worker::workers, availableWork)
+        | Idle -> 
+            match availableWork with 
+            | [] -> (Idle :: workers, availableWork)
+            | nextItem :: remainingWork -> ((WorkOn (nextItem,progress.Timer)) :: workers, remainingWork)
+ 
+    let (updatedWorkers, _) = Seq.fold assignWork (List.empty, availableWork) progress.Workers
+
+    let progress = {
+        progress with          
+            Workers = updatedWorkers
+    }
+
+    if (Seq.length scenario.Actions) = (List.length progress.Completed) then
+        { progress with
+           Completed = List.rev progress.Completed }
     else
-        step scenario { progress with Completed = ((Seq.head next) :: progress.Completed); Timer = progress.Timer + 1 }
+        let progress = {
+            progress with          
+                Timer = progress.Timer + 1                
+        }
+
+        step scenario progress
+        
 
 let day7A (inputs: string[]) =
     let rules = inputs |> Seq.map parse
     let allActions = rules |> Seq.collect (fun (c,r) -> [c; r]) |> Seq.distinct
 
-    let result = step { Rules = rules; Actions= allActions; Workers= [Idle]} { Completed = List.empty; Timer = 0; }
+    let costFunction act = 1
+
+    let scenario = { Rules = rules; Actions= allActions; CostFunction = costFunction} 
+    let progress = { Completed = List.empty; Timer = 0; Workers= [Idle];}
+    
+    let result = step scenario progress
     new string(result.Completed |> List.toArray)
     
 let day7B workerCount baseCost inputs = 
-    let actionCost = Action.duration baseCost    
+    let costFunction = Action.duration baseCost
+    let rules = inputs |> Seq.map parse
+    let allActions = rules |> Seq.collect (fun (c,r) -> [c; r]) |> Seq.distinct
     let workers = Seq.init workerCount (fun _ -> Idle)
+    let scenario = { Rules = rules; Actions= allActions; CostFunction = costFunction} 
+    let progress = { Completed = List.empty; Timer = 0; Workers= workers;}
 
-    null
+    let result = step scenario progress
+    result.Timer
