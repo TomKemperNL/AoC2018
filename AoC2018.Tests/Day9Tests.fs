@@ -30,14 +30,14 @@ type Day9Tests() =
             ("30 players; last marble is worth 5807 points", 37305);
         |]
         for (input, expected) in examples do
-            Assert.AreEqual(expected, (day9A input), input)
+            Assert.AreEqual(expected, (day9 input), input)
 
     [<Test>]
     member this.Day9A() = 
         let input = "441 players; last marble is worth 71032 points"
-        Assert.AreEqual(393229, (day9A input))
+        Assert.AreEqual(393229, (day9 input))
 
     [<Test>]
     member this.Day9B() = 
-        let input = "441 players; last marble is worth 7103200 points"
-        Assert.AreEqual(0, (day9A input))
+        let input = "441 players; last marble is worth 7103200 points"        
+        Assert.AreEqual(3273405195L, (day9 input))

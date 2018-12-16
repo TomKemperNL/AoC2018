@@ -71,18 +71,18 @@ let runGame marbles players =
     
     let (_, finalOutcomes) = Seq.fold step (initialGame, initialOutcomes) turns
 
-    let score (marbles: Marble seq) : int=
-        marbles |> Seq.map (fun (Marble m) -> m) |> Seq.sum
+    let score (marbles: Marble seq) : int64 =
+        marbles |> Seq.map (fun (Marble m) -> (int64)m) |> Seq.sum
 
     finalOutcomes |> Map.toSeq |> Seq.map snd |> Seq.map score |> Seq.sortDescending |> Seq.head
 
-let day9A input =
+let day9 input =
     let settings = parse input
     let marbles = seq { 1 .. settings.LastMarble } |> Seq.map Marble
     let players = seq { 1 .. settings.NrOfPlayers }
     runGame marbles players
 
-let day9B input =
+let day9B input = //Nope that is not what they meant:)
     let settings = parse input
     let marbles =  Seq.map Marble <| seq { 
         for i in 1 .. (settings.LastMarble - 1) do
