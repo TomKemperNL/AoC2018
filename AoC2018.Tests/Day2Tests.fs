@@ -9,22 +9,18 @@ open Day2
 type Day2Tests() =
        
     [<Test>]
-    member this.Day2AExample() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day2Example.txt")
-        Assert.AreEqual(12, day2A (File.ReadAllLines(path)))
+    member this.Day2AExample() =        
+        Assert.AreEqual(12, day2A (readFileLines "./Day2Example.txt"))
     
     [<Test>]
-    member this.Day2BExample() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day2BExample.txt")
-        Assert.AreEqual("fgij", day2B (File.ReadAllLines(path)))
+    member this.Day2BExample() =        
+        Assert.AreEqual("fgij", day2B (readFileLines "./Day2Example.txt"))
 
 
     [<Test>]
-    member this.Day2A() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day2Input.txt")
-        Assert.AreEqual(3952, day2A (File.ReadAllLines(path)))
+    member this.Day2A() =        
+        Assert.AreEqual(3952, day2A (readFileLines "./Day2Input.txt"))
 
     [<Test>]
-    member this.Day2B() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day2Input.txt")
-        Assert.AreEqual("vtnikorkulbfejvyznqgdxpaw", day2B (File.ReadAllLines(path)))
+    member this.Day2B() =        
+        Assert.AreEqual("vtnikorkulbfejvyznqgdxpaw", day2B (readFileLines "./Day2Input.txt"))

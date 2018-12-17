@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
- <PropertyGroup>
+  
+  <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Shared.fs" />
     <Compile Include="Day1Tests.fs" />
     <Content Include="packages.config" />
     <Content Include="Day1Input.txt">
@@ -63,7 +66,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="nunit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.6'">

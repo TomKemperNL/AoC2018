@@ -21,9 +21,8 @@ type Day7Tests() =
         Assert.AreEqual("CABDFE", day7A input)
 
     [<Test>]
-    member this.Day7A() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day7Input.txt")
-        Assert.AreEqual("BHRTWCYSELPUVZAOIJKGMFQDXN", (day7A (File.ReadAllLines(path))))
+    member this.Day7A() =        
+        Assert.AreEqual("BHRTWCYSELPUVZAOIJKGMFQDXN", (day7A (readFileLines "./Day7Input.txt")))
    
    
     [<Test>]
@@ -41,6 +40,5 @@ type Day7Tests() =
 
 
     [<Test>]
-    member this.Day7B() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day7Input.txt")
-        Assert.AreEqual(959, (day7B 5 60 (File.ReadAllLines(path))))
+    member this.Day7B() =        
+        Assert.AreEqual(959, (day7B 5 60 (readFileLines "./Day7Input.txt")))

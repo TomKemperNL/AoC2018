@@ -32,7 +32,7 @@ type Day8Tests() =
 
     [<Test>]
     member this.Day8A() =
-        let input = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day8Input.txt"))
+        let input = readFile "./Day8Input.txt"
         Assert.AreEqual (43351, (day8A input))
 
     [<Test>]
@@ -43,5 +43,5 @@ type Day8Tests() =
     
     [<Test>]
     member this.Day8B() =
-        let input = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day8Input.txt"))
+        let input = readFile "./Day8Input.txt"
         Assert.AreEqual (21502, (day8B input))

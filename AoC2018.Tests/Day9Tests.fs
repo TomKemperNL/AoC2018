@@ -7,7 +7,7 @@ open Day9
 type Day9Tests() =
     
     [<Test>]
-    member this.roundAndRound() =
+    member this.RoundAndRound() =
         let circle = [ 0; 1; 2; 3; 4; 5 ]
         
         Assert.AreEqual (5, (Circle.clockwise circle 3 2), "Can go clockwise")
