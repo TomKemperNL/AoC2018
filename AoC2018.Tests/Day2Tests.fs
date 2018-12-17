@@ -14,7 +14,7 @@ type Day2Tests() =
     
     [<Test>]
     member this.Day2BExample() =        
-        Assert.AreEqual("fgij", day2B (readFileLines "./Day2Example.txt"))
+        Assert.AreEqual("fgij", day2B (readFileLines "./Day2BExample.txt"))
 
 
     [<Test>]

@@ -3,10 +3,13 @@ module Shared
 open System.Reflection
 open System.IO
 
-let readFile fileName =
-    let path = Path.Combine(Assembly.GetEntryAssembly().Location, fileName)
-    System.IO.File.ReadAllText path
+let private getPath name = 
+    let f = new FileInfo(Assembly.GetExecutingAssembly().Location)
+    Path.Combine(f.DirectoryName, name)
 
-let readFileLines fileName =
-    let path = Path.Combine(Assembly.GetEntryAssembly().Location, fileName)
-    System.IO.File.ReadAllLines path
+let readFile fileName =   
+    System.IO.File.ReadAllText (getPath fileName)
+
+let readFileLines fileName =    
+    System.Console.WriteLine (getPath fileName)
+    System.IO.File.ReadAllLines (getPath fileName)
