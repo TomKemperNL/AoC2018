@@ -22,3 +22,11 @@ type Day11Tests() =
     member this.Day11A() =
         Assert.AreEqual((20,77), day11A 9221)
         
+    [<Test>]
+    member this.Day11BSquareExamples() =
+        Assert.AreEqual((90,269,16), day11B 18)
+        Assert.AreEqual((232,251,12), day11B 42)
+
+    [<Test>]
+    member this.Day11B() =        
+        Assert.AreEqual((143,57,10), day11B 9221)

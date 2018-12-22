@@ -14,8 +14,7 @@ module FuelCell =
             |> (+) serial
             |> (*) rackId
             |> hundreds 
-            |> fun p -> p - 5
-      
+            |> fun p -> p - 5  
 
 let day11A input = 
     let cellPower = FuelCell.power input
@@ -36,5 +35,30 @@ let day11A input =
         for y in 1 .. (max - squareSize + 1) do
         yield (x,y)
     }
+
+    Seq.maxBy squarePower squares
+
+let day11B input =
+    let cellPower = FuelCell.power input
+    let max = 300
+    
+    let powergrid = Array2D.initBased 1 1 max max (fun x y -> cellPower (Cell(x,y)))
+
+    let squarePower (topLeftX, topLeftY, squareSize) =
+        Seq.sum <| seq {
+            for x in topLeftX..(topLeftX + squareSize - 1) do
+            for y in topLeftY..(topLeftY + squareSize - 1) do
+                yield Array2D.get powergrid x y
+        } 
+        
+    let squares = seq {
+        for w in 1 .. 300 do
+        for x in 1 .. (max - w + 1) do
+        for y in 1 .. (max - w + 1) do
+        
+        yield (x,y, w)
+    }
+
+    let squareCount = Seq.length squares
 
     Seq.maxBy squarePower squares
