@@ -7,8 +7,6 @@ open System
 
 [<TestFixture>]
 type Day1Tests() =
-    let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day1Input.txt")
-
     [<TestCase(3, "+1, -2, +3, +1")>]
     [<TestCase(3, "+1, +1, +1")>]
     [<TestCase(0, "+1, +1, -2")>]
@@ -18,7 +16,7 @@ type Day1Tests() =
     
     [<Test>]
     member this.Day1A() =       
-       let input: string[] = File.ReadAllLines(path)
+       let input: string[] = readFileLines "./Day1Input.txt"
        Assert.AreEqual(484, (day1A input))
     
     [<TestCase(2, "+1, -2, +3, +1")>]
@@ -31,5 +29,5 @@ type Day1Tests() =
        
     [<Test>]
     member this.Day1B() =       
-       let input: string[] = File.ReadAllLines(path)
+       let input: string[] = readFileLines "./Day1Input.txt"
        Assert.AreEqual(367, (day1B input))

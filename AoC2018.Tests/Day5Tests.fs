@@ -21,13 +21,11 @@ type Day5Tests() =
         Assert.AreEqual(6, day5A "aabAAB")
     
     [<Test>]
-    member this.Day5A() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day5Input.txt")
-        Assert.AreEqual(11364, (day5A (File.ReadAllText(path))))
+    member this.Day5A() =        
+        Assert.AreEqual(11364, (day5A (readFile "./Day5Input.txt")))
 
     [<Test>]
-    member this.Day5B() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day5Input.txt")
-        let result = day5B (File.ReadAllText(path))
+    member this.Day5B() =        
+        let result = day5B (readFile "./Day5Input.txt")
         Assert.AreEqual(4212, result)
 

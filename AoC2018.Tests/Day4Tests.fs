@@ -10,22 +10,18 @@ open System.Globalization
 type Day4Tests() =
 
     [<Test>]
-    member this.Day4AExample() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day4Example.txt")
-        Assert.AreEqual(240, day4A (File.ReadAllLines(path)))
+    member this.Day4AExample() =        
+        Assert.AreEqual(240, day4A (readFileLines "./Day4Example.txt"))
     
     [<Test>]
-    member this.Day4A() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day4Input.txt")
-        Assert.AreEqual(39698, day4A (File.ReadAllLines(path)))
+    member this.Day4A() =        
+        Assert.AreEqual(39698, day4A (readFileLines "./Day4Input.txt"))
 
     
     [<Test>]
-    member this.Day4BExample() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day4Example.txt")
-        Assert.AreEqual(4455, day4B (File.ReadAllLines(path)))
+    member this.Day4BExample() =        
+        Assert.AreEqual(4455, day4B (readFileLines "./Day4Example.txt"))
     
     [<Test>]
-    member this.Day4B() =
-        let path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./Day4Input.txt")
-        Assert.AreEqual(14920, day4B (File.ReadAllLines(path)))
+    member this.Day4B() =        
+        Assert.AreEqual(14920, day4B (readFileLines "./Day4Input.txt"))

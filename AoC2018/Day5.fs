@@ -4,7 +4,7 @@ open System
 open System.Security.Cryptography
 
 let shouldReact (c1: char) (c2: char) : bool =
-    (not (c1.ToString().Equals(c2.ToString()))) && c1.ToString().Equals(c2.ToString(), StringComparison.InvariantCultureIgnoreCase)
+    (not (c1.ToString().Equals(c2.ToString()))) && c1.ToString().Equals(c2.ToString(), StringComparison.OrdinalIgnoreCase)
 
 let charsToString cs =
     new String(cs |> List.toArray)
@@ -15,7 +15,7 @@ let rec fix f i =
     else fix f result
 
 let variant (polymer: char list) (utype: char) : char list =
-    polymer |> List.filter (fun c -> not (c.ToString().Equals(utype.ToString(), StringComparison.InvariantCultureIgnoreCase)))
+    polymer |> List.filter (fun c -> not (c.ToString().Equals(utype.ToString(), StringComparison.OrdinalIgnoreCase)))
 
 let react polymer =
     let rec reactRec acc (polymer: char list) :char list =
