@@ -9,7 +9,8 @@ let main argv =
     let fileName = argv.[0]
     let inputs = System.IO.File.ReadLines(fileName)
 
-    day10A Console.Out inputs
-
-    Console.ReadKey() |> ignore
+    day10A Console.Out inputs (fun() -> 
+        Console.ReadKey() |> ignore
+        Console.Clear()
+    )    
     0 // return an integer exit code
