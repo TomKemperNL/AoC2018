@@ -54,13 +54,6 @@ let squarePower powergrid =
     and memoizedSquare : (int*int*int -> int) = memoize squarePowerInner
     memoizedSquare
 
-let squarePowerOld (powergrid: int[,]) (topLeftX, topLeftY, (squareSize: int)) =
-    Seq.sum <| seq {
-        for x in topLeftX..(topLeftX + squareSize - 1) do
-        for y in topLeftY..(topLeftY + squareSize - 1) do
-            yield Array2D.get powergrid x y
-    }
-
 let createGrid max input =
     let cellPower = FuelCell.power input
     Array2D.initBased 1 1 max max (fun x y -> cellPower (Cell(x,y)))

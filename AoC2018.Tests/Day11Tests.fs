@@ -14,20 +14,6 @@ type Day11Tests() =
         Assert.AreEqual(4, FuelCell.power 71 (Cell (101,153)))
     
     [<Test>]
-    member this.Day11Fthisshit() =
-        let grid = createGrid 300 9221
-        let actualResult = squarePower2 grid (33,45,3)
-        let recursiveResult = squarePower grid (33,45,3)
-        Assert.AreEqual(actualResult, recursiveResult)
-    
-    [<Test>]
-    member this.Day11Fthisshit2() =
-        let grid = createGrid 300 9221
-        let actualResult = squarePower2 grid (88,266,3)
-        let recursiveResult = squarePower grid (88,266,3)
-        Assert.AreEqual(actualResult, recursiveResult)
-
-    [<Test>]
     member this.Day11SquareExamples() =
         Assert.AreEqual((33,45), day11A 18)
         Assert.AreEqual((21,61), day11A 42)
