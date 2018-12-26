@@ -17,7 +17,7 @@ let parse input =
 
 let rec animate writer (state: Point list) next i =
     let bounds = state |> List.map fst |> Bounds.find
-    let (width, height) = Bounds.dimensions bounds
+    let (width, height) = Bounds.size bounds
 
     if Math.Abs(width * height) < 1500 then 
         render writer bounds (state |> Seq.map fst |> List.ofSeq)    

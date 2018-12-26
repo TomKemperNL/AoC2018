@@ -53,7 +53,7 @@ let blobmap map (initialClaims: Claim seq) infinitepoints =
 
     let rec blobRec map (claims: Claim seq) (infinitepoints: Set<Coord>) =    
         let checkBounds (goodClaims, infinites: Set<Coord>) (owner, coords) =
-            let (outBounds, inBounds) = List.partition (Bounds.outOf bounds) coords
+            let (outBounds, inBounds) = List.partition (Bounds.outOfBounds bounds) coords
             let infinites2 = 
                 if 
                     List.isEmpty outBounds then infinites 

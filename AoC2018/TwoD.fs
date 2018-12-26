@@ -20,14 +20,13 @@ type Bounds = {
 }
 
 module Bounds =
-    let size { TopLeft=Coord (x1,y1); BottomRight=Coord (x2,y2)} = 
-        (x2 - x1) * (y2 - y1)
-    
-    let outOf { TopLeft=Coord (x1,y1); BottomRight=Coord (x2,y2)} (Coord (x,y))  =
-        x < x1 || x > x2 || y < y1 || y > y2    
+    let area { TopLeft=Coord (x1,y1); BottomRight=Coord (x2,y2)} = 
+        (x2 - x1) * (y2 - y1)      
     
     let inBounds { TopLeft =  Coord(minX, minY); BottomRight = Coord(maxX, maxY)} (Coord(x,y)) =
         (x >= minX) && (x <= maxX) && (y >= minY) && ( y <= maxY )
+
+    let outOfBounds b c = not <| inBounds b c
         
     let find (input: Coord seq) : Bounds =        
         let expand { TopLeft = Coord(minX,minY); BottomRight = Coord(maxX,maxY)} (Coord(x,y)) =
@@ -43,11 +42,11 @@ module Bounds =
             let t = Seq.skip 1 input        
             input |> Seq.fold expand { TopLeft = Coord (x,y); BottomRight = Coord(x,y) }           
 
-    let dimensions { TopLeft= Coord(x1,y1); BottomRight= Coord(x2,y2)} =
+    let size { TopLeft= Coord(x1,y1); BottomRight= Coord(x2,y2)} =
         (Math.Abs(x1 - x2) + 1, Math.Abs(y1 - y2) + 1)
    
 let render (writer: TextWriter) bounds (points: Coord list) : unit =
-    let (width, height) = Bounds.dimensions bounds
+    let (width, height) = Bounds.size bounds
     let (Coord (tlx, tly)) = bounds.TopLeft
     let offSetX = -1 * tlx
     let offSetY = -1 * tly
