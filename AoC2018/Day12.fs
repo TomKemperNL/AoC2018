@@ -35,7 +35,7 @@ let parse (input: string array) =
 
     {
         InitialState = parseState input.[0];
-        Rules = Array.skip 2 input |> Seq.map parseRule |> List.ofSeq
+        Rules = Array.skip 2 input |> Seq.map parseRule |> Seq.filter (fun r -> r.Result) |> List.ofSeq
     }
 
 
@@ -57,7 +57,10 @@ let spread (rules: Rule list) (state: State) :State=
     let minIndex = Map.toSeq state |> Seq.map fst |> Seq.min
     let maxIndex = Map.toSeq state |> Seq.map fst |> Seq.max
 
-    let newMap = seq { (minIndex - 2) .. (maxIndex + 2) } |> Seq.map (fun i -> (i, Pot <| shouldSet i)) |> Map.ofSeq
+    let newMap = seq { (minIndex - 2) .. (maxIndex + 2) } 
+                    |> Seq.map (fun i -> (i, Pot <| shouldSet i)) 
+                    |> Seq.filter (fun (i, Pot p) -> p)
+                    |> Map.ofSeq
     newMap
 
 let rec spreadN rules state (n: int64) =
