@@ -60,14 +60,14 @@ let spread (rules: Rule list) (state: State) :State=
     let newMap = seq { (minIndex - 2) .. (maxIndex + 2) } |> Seq.map (fun i -> (i, Pot <| shouldSet i)) |> Map.ofSeq
     newMap
 
-let rec spreadN rules state n =
+let rec spreadN rules state (n: int64) =
     match n with 
-    | 0 -> state
+    | 0L -> state
     | n -> 
         let next = spread rules state
-        spreadN rules next (n - 1)
+        spreadN rules next (n - 1L)
 
-let day12A input= 
+let day12 input (n: int64) = 
     let input = parse input
-    let state = spreadN input.Rules input.InitialState 20
+    let state = spreadN input.Rules input.InitialState n
     Map.toSeq state |> Seq.filter (fun (i, Pot b) -> b) |> Seq.map fst |> Seq.sum
