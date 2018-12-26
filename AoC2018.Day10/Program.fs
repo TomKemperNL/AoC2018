@@ -9,7 +9,7 @@ let main argv =
     let fileName = argv.[0]
     let inputs = System.IO.File.ReadLines(fileName)
 
-    day10A Console.Out inputs (fun() -> 
+    day10A Console.Out visualization inputs (fun() -> 
         Console.ReadKey() |> ignore
         Console.Clear()
     )    

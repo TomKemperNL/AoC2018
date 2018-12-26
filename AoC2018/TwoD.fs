@@ -45,19 +45,19 @@ module Bounds =
     let size { TopLeft= Coord(x1,y1); BottomRight= Coord(x2,y2)} =
         (Math.Abs(x1 - x2) + 1, Math.Abs(y1 - y2) + 1)
    
-let render (writer: TextWriter) bounds (points: Coord list) : unit =
+let render (writer: TextWriter) (tokens: Map<'T option, string>) bounds (points: Map<Coord, 'T>) : unit =
     let (width, height) = Bounds.size bounds
     let (Coord (tlx, tly)) = bounds.TopLeft
     let offSetX = -1 * tlx
     let offSetY = -1 * tly
-    let array = Array2D.create width height "."
-    let offSetPoints = Seq.map (fun (Coord (x,y)) -> Coord (x + offSetX, y + offSetY)) points
+    let array = Array2D.create width height (Map.find None tokens)
+    let offSetPoints = Map.toSeq points |> Seq.map (fun (Coord (x,y), symbol) -> (Coord (x + offSetX, y + offSetY), symbol))
     let maxY = height - 1
     let maxX = width - 1
 
-    for Coord (x,y) in offSetPoints do
+    for (Coord (x,y), symbol) in offSetPoints do
         if x >= 0 && x <= maxX && y >= 0 && y <= maxY then
-            Array2D.set array x y "#"
+            Array2D.set array x y (Map.find (Some symbol) tokens)
     for y in 0..maxY do
         for x in 0..maxX do
             writer.Write(Array2D.get array x y)
