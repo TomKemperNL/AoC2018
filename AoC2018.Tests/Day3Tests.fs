@@ -4,13 +4,14 @@ open NUnit.Framework
 open System.IO
 open System
 open Day3
+open TwoD
 
 [<TestFixture>]
 type Day3Tests() =
 
     [<Test>]
     member this.Day3Parse() = 
-        let expected = Claim (12,Coord (2,4), Size (5,6))
+        let expected = Claim (12, Coord (2,4), Size (5,6))
         Assert.AreEqual(expected, parse "#12 @ 2,4: 5x6")
        
     [<Test>]

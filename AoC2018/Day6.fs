@@ -1,36 +1,11 @@
 ﻿module Day6
 
 open System
-
-type Coord = (int*int)
-
-module Coord =
-    let Neighbours (x,y) = 
-        [ (x - 1, y); (x + 1, y); (x, y - 1); (x, y + 1) ]
-
-    let distance ((x1,y1): Coord) ((x2,y2): Coord) =        
-        Math.Abs(x1 - x2) + Math.Abs((y1 - y2))
+open TwoD
 
 type Kind = 
     | Infinite
     | Finite
-
-type Bounds = {
-    TopLeft: Coord
-    BottomRight: Coord
-}
-
-module Bounds =
-    let size { TopLeft=(x1,y1); BottomRight=(x2,y2)} = 
-        (x2 - x1) * (y2 - y1)
-    
-    let outOf { TopLeft=(x1,y1); BottomRight=(x2,y2)} (x,y)  =
-        x < x1 || x > x2 || y < y1 || y > y2    
-    
-    let find inputs =
-        let update { TopLeft=(mx,my); BottomRight=(Mx,My) } (x,y) = 
-            { TopLeft = Math.Min(mx, x), Math.Min(my,y); BottomRight = Math.Max(Mx,x), Math.Max(My,y) }
-        Seq.fold update { TopLeft = (0,0); BottomRight = (0,0) } inputs
 
 type ClaimStatus = 
     | Tied
@@ -44,13 +19,13 @@ module Claim =
 
 let parse input =
     match input with 
-    | Regex "(\d+), (\d+)" [x ; y] -> (Int32.Parse(x), Int32.Parse(y))    
+    | Regex "(\d+), (\d+)" [x ; y] -> Coord (Int32.Parse(x), Int32.Parse(y))    
     | _ -> failwith "parse-error"
 
 
 let expandFront (claims: Claim seq) : Claim seq =
     let expand (c, points) = 
-        (c, List.collect (Coord.Neighbours) points |> List.distinct)
+        (c, List.collect (Coord.neighbors) points |> List.distinct)
     claims |> Seq.map expand
     
 let claim map (newClaims: seq<Claim>) =       
@@ -116,13 +91,13 @@ let day6A inputs =
 let day6B tolerance inputs = 
     let inputs = inputs |> Seq.map parse
     let bounds = Bounds.find inputs
-    let (tlx, tly) = bounds.TopLeft
-    let (brx, bry) = bounds.BottomRight
+    let (Coord (tlx, tly)) = bounds.TopLeft
+    let (Coord (brx, bry)) = bounds.BottomRight
     seq {
         for x in tlx .. brx do
         for y in tly .. bry do
 
-        let total = inputs |> Seq.map (fun i -> Coord.distance (x,y) i) |> Seq.sum
+        let total = inputs |> Seq.map (fun i -> Coord.distance (Coord (x,y)) i) |> Seq.sum
         if total < tolerance then
             yield (x,y)
 

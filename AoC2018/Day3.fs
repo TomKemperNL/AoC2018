@@ -3,13 +3,10 @@
 open System
 open System.Text.RegularExpressions
 open System.Collections.Generic
+open TwoD
 
 type Size =
     | Size of int*int
-
-[<Struct>]
-type Coord = 
-    | Coord of int*int
 
 type Claim = 
     | Claim of int*Coord*Size

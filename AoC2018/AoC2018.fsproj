@@ -9,6 +9,7 @@
     <None Include="App.config" />
     <Content Include="packages.config" />
     <Compile Include="Shared.fs" />
+    <Compile Include="TwoD.fs" />
     <Compile Include="Day1.fs" />
     <Compile Include="Day2.fs" />
     <Compile Include="Day3.fs" />
